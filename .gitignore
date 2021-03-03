@@ -3,3 +3,5 @@ FSF/
 INT/
 TFP/
 TWT/
+__pycache__/
+db.sqlite

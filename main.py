@@ -9,88 +9,65 @@ import csv
 import numpy as np
 import random
 import sqlite3
-import pandas as pd
 from sklearn import tree
 import matplotlib.pyplot as plt
+from load_db import gen_database
 
 
-
-#if target value = true then is human = true
+"""
+Creates two tables: array_uid, array_target to associate an uid to a target value (shared index)
+arg:
+    target value: equals 1 if the uid belongs to a human, equals 0 otherwise
+"""
 def to_target_array(filename, target_value):
     with open(filename, 'r', encoding='utf-8') as csvfile:
         reader = csv.reader((line.replace('\0','') for line in csvfile), delimiter=',')
-        array_u = []
+        array_target = []
+        array_uid = []
         for row in reader:
-            array_u.append([row[0],target_value])
-    return array_u[1:] #retire titres
+            array_uid.append(row[0])
+            array_target.append(target_value)
+    return array_uid[1:], array_target[1:] #retire titres
 
+"""
+Generates training data sets described in the study.
+Creates two tables for each data set: array_uid, array_target to associate an uid to a target value (shared index)
+
+@returns bas_uid, bas_target: only the base dataset is returned as others were not needed so far
+"""
 def gen_target_array():
     #Human
-    e13_u = to_target_array('E13\\users.csv',1)
-    tfp_u = to_target_array('TFP\\users.csv',1)
-    temp = np.concatenate((e13_u, tfp_u))
-    hum_u = temp[:-2] #il y en a 1952 dans le set 
+    e13_uid, e13_target = to_target_array('E13\\users.csv',1)
+    tfp_uid, tfp_target  = to_target_array('TFP\\users.csv',1)
+    merged_uid = np.concatenate((e13_uid, tfp_uid))
+    merged_target = np.concatenate((e13_target, tfp_target))
+    hum_uid = merged_uid[:-2] #il y en a 1952 dans le set 
+    hum_target = merged_target[:-2]
     #Fake
-    fsf_u = to_target_array('FSF\\users.csv',0)
-    int_u = to_target_array('INT\\users.csv',0)
-    twt_u = to_target_array('TWT\\users.csv',0)
-    temp = np.concatenate((fsf_u, int_u,twt_u))
-    fak_u = random.sample(list(temp), 1950)
+    fsf_uid, fsf_target = to_target_array('FSF\\users.csv',0)
+    int_uid, int_target = to_target_array('INT\\users.csv',0)
+    twt_uid, twt_target = to_target_array('TWT\\users.csv',0)
+    merged_uid = np.concatenate((fsf_uid, int_uid,twt_uid))
+    merged_target = np.concatenate((fsf_target, int_target,twt_target))
+    #fak_u = random.sample(list(temp), 1950)
+    fak_uid, fak_target = zip(*random.sample(list(zip(merged_uid, merged_target)), 1950))
     #Training sample
-    bas_u = np.concatenate((hum_u, fak_u))
-    return bas_u
+    bas_uid = np.concatenate((hum_uid, fak_uid))
+    bas_target = np.concatenate((hum_target, fak_target))
+    return bas_uid, bas_target
 
-def dbgen_users(con):
-    #users
-    e13_u = pd.read_csv('E13\\users.csv')
-    tfp_u = pd.read_csv('TFP\\users.csv')
-    fsf_u = pd.read_csv('FSF\\users.csv')
-    int_u = pd.read_csv('INT\\users.csv')
-    twt_u = pd.read_csv('TWT\\users.csv')
-    df = pd.concat([e13_u, tfp_u, fsf_u, int_u, twt_u])
-    df.to_sql('users', con, if_exists='append', index=False)
-def dbgen_friends(con):
-    #friends
-    e13_f = pd.read_csv('E13\\friends.csv')
-    tfp_f = pd.read_csv('TFP\\friends.csv')
-    fsf_f = pd.read_csv('FSF\\friends.csv')
-    int_f = pd.read_csv('INT\\friends.csv')
-    twt_f = pd.read_csv('TWT\\friends.csv')
-    df = pd.concat([e13_f, tfp_f, fsf_f, int_f, twt_f])
-    df.to_sql('friends', con, if_exists='append', index=False)
-def dbgen_tweets(con):
-    #tweets
-    e13_t = pd.read_csv('E13\\tweets.csv')
-    tfp_t = pd.read_csv('TFP\\tweets.csv')
-    fsf_t = pd.read_csv('FSF\\tweets.csv')
-    int_t = pd.read_csv('INT\\tweets.csv')
-    twt_t = pd.read_csv('TWT\\tweets.csv')
-    df = pd.concat([e13_t, tfp_t, fsf_t, int_t, twt_t])
-    df.to_sql('tweets', con, if_exists='append', index=False)
-def dbgen_followers(con):
-    #followers
-    e13_fo = pd.read_csv('E13\\followers.csv')
-    tfp_fo = pd.read_csv('TFP\\followers.csv')
-    fsf_fo = pd.read_csv('FSF\\followers.csv')
-    int_fo = pd.read_csv('INT\\followers.csv')
-    twt_fo = pd.read_csv('TWT\\followers.csv')
-    df = pd.concat([e13_fo, tfp_fo, fsf_fo, int_fo, twt_fo])
-    df.to_sql('followers', con, if_exists='append', index=False)
-def gen_database(con): 
-    dbgen_users(con)
-    dbgen_friends(con)
-    dbgen_followers(con)
-    #dbgen_tweets(con)
-    
-def gen_training(cur, bas_target):
+"""
+Returne a table witch, foreach uid, list the features described in the study in numerical format
+    the table matches the index of base_uid and base_target
+    format: [[0,1,0][1,1,1]]
+"""
+def gen_training_features(cur,bas_uid):
     #has_name, has_image, has_address
     results = []
-    for t in bas_target:
-        uid= t[0]
+    for uid in bas_uid:
         cur.execute("SELECT id,name, profile_use_background_image, location FROM users WHERE id = ?;", (uid,))
         row = cur.fetchone()
         result = []
-        #result.append(row[0])
         for i in range(0,3):
             if row[i] != None:
                 result.append(1)
@@ -100,41 +77,37 @@ def gen_training(cur, bas_target):
     return results
 
 if __name__ == "__main__":
-    con = sqlite3.connect("data/db.sqlite")
+    con = sqlite3.connect("db.sqlite")
     cur = con.cursor()
-    """
+    
+    #gen database can be commented if the database has already been created, code is in another file
     gen_database(con)
-    for row in cur.execute('SELECT * FROM tweets LIMIT 1;'):
-        print(row)
-
-    """
     
-    bas_target = gen_target_array()
-    bas_training = gen_training(cur, bas_target)
+    bas_uid, bas_target = gen_target_array()
+    bas_training = gen_training_features(cur, bas_uid)
     
-    a = [item[1] for item in bas_target]
-    bas_target = a
-    
-    
-    #https://scikit-learn.org/stable/modules/generated/sklearn.tree.DecisionTreeClassifier.html
-    
-    bas_training = bas_training
-    bas_target = bas_target
+  
     clf = tree.DecisionTreeClassifier(criterion='entropy', min_impurity_decrease=0.03)
     clf = clf.fit(bas_training, bas_target)
-    #/!\ change to use test values!
+    #/!\ il faut changer pour utiliser des valeurs de test, là j'utilise les même data
+        # #porcent_of_success = clf.score(data.get('test'), data.get('test_target'))
     porcent_of_success = clf.score(bas_training, bas_target)
-    tree.plot_tree(clf.fit(bas_training,  bas_target)) #build the tree
-    
-    
-    """
-    porcent_of_success = clf.score(data.get('test'), data.get('test_target'))
-    tree.plot_tree(clf.fit(data.get('training'), data.get('target'))) #build the tree
-    
-    """
-    
-   
+    tree.plot_tree(clf.fit(bas_training,  bas_target)) #build the tree   
     
     con.close()
     
-    #https://stackoverflow.com/questions/30218963/storing-sql-statements-in-a-properties-file-to-be-used-by-python-scripts/30219756
+"""
+Syntaxe:
+    pour parcourir deux listes dont l'indexe correspond: for uid, target in zip(bas_uid, bas_target):
+
+Possible amélioration:
+    pour gen features, store les queries: 
+            https://stackoverflow.com/questions/30218963/storing-sql-statements-in-a-properties-file-to-be-used-by-python-scripts/30219756
+            
+Doc:
+    https://scikit-learn.org/stable/modules/generated/sklearn.tree.DecisionTreeClassifier.html
+    
+Anaconda:
+    To see the plot, look at the square on the top right corner and select "plots" view instead of "help"
+"""
+    
