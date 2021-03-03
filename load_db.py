@@ -2,7 +2,7 @@
 """
 Created on Wed Mar  3 14:33:30 2021
 
-@author: Benjamin
+@author: Bergé Benjamin, Wathelet Jolan, Anicet
 """
 import pandas as pd
 
