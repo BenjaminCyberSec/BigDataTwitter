@@ -7,9 +7,14 @@ Created on Fri Feb 26 17:45:01 2021
 
 
 import sqlite3
-from sklearn import tree
 from load_db import gen_database
 from gen_dataset import gen_target_array
+from sklearn.model_selection import KFold
+import numpy as np
+from eval import Eval
+
+
+
 
 """
 Returne a table witch, foreach uid, list the features described in the study in numerical format
@@ -17,6 +22,10 @@ Returne a table witch, foreach uid, list the features described in the study in 
     format: [[0,1,0][1,1,1]]
 """
 def gen_training_features(cur,bas_uid):
+    ########
+    # TODO
+    #######
+    
     #has_name, has_image, has_address
     results = []
     for uid in bas_uid:
@@ -41,13 +50,22 @@ if __name__ == "__main__":
     bas_uid, bas_target = gen_target_array()
     bas_training = gen_training_features(cur, bas_uid)
     
-  
-    clf = tree.DecisionTreeClassifier(criterion='entropy', min_impurity_decrease=0.03)
-    clf = clf.fit(bas_training, bas_target)
-    #/!\ il faut changer pour utiliser des valeurs de test, là j'utilise les même data
-        # #porcent_of_success = clf.score(data.get('test'), data.get('test_target'))
-    porcent_of_success = clf.score(bas_training, bas_target)
-    tree.plot_tree(clf.fit(bas_training,  bas_target)) #build the tree   
+    evaluator = Eval(bas_training, bas_target)
+    print(evaluator.svm())
+    print(evaluator.tree())
+    print(evaluator.forest())
+    print(evaluator.linear_regression())
+    #print(evaluator.neighbors()) bug
+    print(evaluator.adaBoost())
+    
+    """
+    Résultat KO (voir featurs, voir algo parameter, voir concatenation & score)
+        0.5210394832245732
+        0.5002570694087403
+        0.5210394832245732
+        0.5210394832245732
+        0.5210394832245732
+    """
     
     con.close()
     
