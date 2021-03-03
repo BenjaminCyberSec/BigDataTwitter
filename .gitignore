@@ -5,3 +5,4 @@ TFP/
 TWT/
 __pycache__/
 db.sqlite
+.idea/
