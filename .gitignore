@@ -7,3 +7,4 @@ __pycache__/
 db.sqlite
 .idea/
 .ipynb_checkpoints/
+*.ipynb
