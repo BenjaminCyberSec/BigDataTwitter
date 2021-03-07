@@ -13,6 +13,15 @@ from sklearn.model_selection import KFold
 import numpy as np
 from eval import Eval
 
+from sklearn.cluster import KMeans
+from sklearn import preprocessing
+from sklearn import neighbors
+from sklearn.model_selection import train_test_split
+from sklearn.neighbors import KNeighborsClassifier
+import os
+from utils import *
+from tsne import *
+
 
 
 
@@ -29,12 +38,12 @@ def gen_training_features(cur,bas_uid):
     #has_name, has_image, has_address
     results = []
     for uid in bas_uid:
-        cur.execute("SELECT id,name, profile_use_background_image, location FROM users WHERE id = ?;", (uid,))
+        cur.execute("SELECT statuses_count,followers_count, friends_count, favourites_count FROM users WHERE id = ?;", (uid,))
         row = cur.fetchone()
         result = []
         for i in range(0,3):
             if row[i] != None:
-                result.append(1)
+                result.append(row[i])
             else:
                 result.append(0)
         results.append(result)
@@ -49,14 +58,37 @@ if __name__ == "__main__":
     
     bas_uid, bas_target = gen_target_array()
     bas_training = gen_training_features(cur, bas_uid)
-    
-    evaluator = Eval(bas_training, bas_target)
+
+    # evaluator = Eval(bas_training, bas_target)
+    # print(evaluator.svm())
+    # print(evaluator.tree())
+    # print(evaluator.forest())
+    # print(evaluator.linear_regression())
+    # #print(evaluator.neighbors()) bug
+    # print(evaluator.adaBoost())
+
+    #Algorithme KNN
+    print(bas_uid.shape)
+    xtrain, xtest, ytrain, ytest = train_test_split(bas_training, bas_target, train_size=0.8)
+
+
+
+    neigh = KNeighborsClassifier()
+    neigh.fit(xtrain, ytrain)
+
+    print(ytest)
+    print("######################################################################")
+    print(neigh.predict(xtest))
+
+    evaluator = Eval(neigh.predict(xtest), ytrain)
     print(evaluator.svm())
-    print(evaluator.tree())
-    print(evaluator.forest())
-    print(evaluator.linear_regression())
-    #print(evaluator.neighbors()) bug
-    print(evaluator.adaBoost())
+
+
+
+
+
+
+
     
     """
     Résultat KO (voir featurs, voir algo parameter, voir concatenation & score)
