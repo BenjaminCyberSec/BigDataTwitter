@@ -41,20 +41,21 @@ def evaluate_all( clf, training, target, nbr_folds):
         clf.fit(X_train,y_train )
         result = clf.predict(X_test)
         
-        recall = metrics.recall_score(y_test, result)
+        #recall = metrics.recall_score(y_test, result)
         precision = metrics.precision_score(y_test, result)
         accuracy = metrics.accuracy_score(y_test, result)
         f1_score = metrics.f1_score(y_test, result)
-        matthews_corrcoef = metrics.matthews_corrcoef(y_test, result)
+        #matthews_corrcoef = metrics.matthews_corrcoef(y_test, result)
         
-        recall_t.append(recall)
+        #recall_t.append(recall)
         precision_t.append(precision)
         accuracy_t.append(accuracy)
         f1_score_t.append(f1_score)
-        mc_t.append(matthews_corrcoef)
+        #mc_t.append(matthews_corrcoef)
         
+        #'recall':recall_t, , 'mc': mc_t
     
-    return {'recall':recall_t, 'precision': precision_t, 'accuracy': accuracy_t, 'f1_score': f1_score_t, 'mc': mc_t}
+    return {'precision': precision_t, 'accuracy': accuracy_t, 'f1_score': f1_score_t}
 
 
 class Eval:
@@ -87,7 +88,7 @@ class Eval:
             porcent_of_success = clf.score(bas_training, bas_target)
             tree.plot_tree(clf.fit(bas_training,  bas_target)) #build the tree
         """
-        return self.kfold_eval(tree.DecisionTreeClassifier(criterion='entropy', min_impurity_decrease=0.03))
+        return self.kfold_eval(tree.DecisionTreeClassifier(criterion='entropy',  max_depth=50))
     
     def forest(self):
         return self.kfold_eval(RandomForestClassifier(n_estimators=100))
