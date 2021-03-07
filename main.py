@@ -45,7 +45,7 @@ if __name__ == "__main__":
     cur = con.cursor()
     
     #gen database can be commented if the database has already been created, code is in another file
-    gen_database(con)
+    #gen_database(con)
     
     bas_uid, bas_target = gen_target_array()
     bas_training = gen_training_features(cur, bas_uid)
