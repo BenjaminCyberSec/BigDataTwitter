@@ -32,7 +32,8 @@ def gen_training_features(cur,bas_uid):
         cur.execute("SELECT id, name, profile_use_background_image, location, description, url, listed_count, followers_count, statuses_count, friends_count FROM users WHERE id = ?;", (uid,))
         row = cur.fetchone()
         result = []
-        #for i in range(1,11):
+
+        #Camisani-Calzolari
         # Has a name ?   
         if row[1] != None:
             result.append(1)
@@ -78,6 +79,19 @@ def gen_training_features(cur,bas_uid):
             result.append(1)
         else:
             result.append(0)
+
+        #State of search
+        #
+
+        #Socialbakers
+
+        #Stringhini et al.
+        #Number of follower
+        #result.append(row[7])
+        #Number of tweet
+        #result.append(row[8])
+        #Yang et al.
+        #Added features
         
         results.append(result)
     return results
@@ -104,8 +118,11 @@ if __name__ == "__main__":
     print(evaluator.forest())
     print("linear_regression")
     print(evaluator.linear_regression())
+    """
+    c'est cassé pour l'instant
     print("neighbors")
     print(evaluator.neighbors()) 
+    """
     print("adaBoost")
     print(evaluator.adaBoost())
     

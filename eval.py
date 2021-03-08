@@ -88,7 +88,7 @@ class Eval:
             porcent_of_success = clf.score(bas_training, bas_target)
             tree.plot_tree(clf.fit(bas_training,  bas_target)) #build the tree
         """
-        return self.kfold_eval(tree.DecisionTreeClassifier(criterion='entropy',  max_depth=50))
+        return self.kfold_eval(tree.DecisionTreeClassifier(criterion='entropy',   min_impurity_decrease=0.03, min_samples_leaf=1))
     
     def forest(self):
         return self.kfold_eval(RandomForestClassifier(n_estimators=100))
@@ -103,5 +103,5 @@ class Eval:
         return self.kfold_eval(NearestNeighbors(n_neighbors=2, algorithm='ball_tree'))
     
     def adaBoost(self):
-        return self.kfold_eval(AdaBoostClassifier(n_estimators=100, random_state=0))
+        return self.kfold_eval(AdaBoostClassifier(n_estimators=100,learning_rate=1.0, random_state=0))
     
