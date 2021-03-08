@@ -9,9 +9,9 @@ Created on Fri Feb 26 17:45:01 2021
 import sqlite3
 from load_db import gen_database
 from gen_dataset import gen_target_array
-from sklearn.model_selection import KFold
-import numpy as np
 from eval import Eval
+import sys
+import test_utils
 
 
 
@@ -29,17 +29,77 @@ def gen_training_features(cur,bas_uid):
     #has_name, has_image, has_address
     results = []
     for uid in bas_uid:
-        cur.execute("SELECT id,name, profile_use_background_image, location FROM users WHERE id = ?;", (uid,))
+        cur.execute("SELECT id, name, profile_use_background_image, location, description, url, listed_count, followers_count, statuses_count, friends_count FROM users WHERE id = ?;", (uid,))
         row = cur.fetchone()
         result = []
-        for i in range(0,3):
-            if row[i] != None:
-                result.append(1)
-            else:
-                result.append(0)
+
+        #Camisani-Calzolari
+        # Has a name ?  
+        """ Ils ont tous un nom
+        if row[1] != None:
+            result.append(1)
+        else:
+            result.append(0)
+        """
+        # Has a background_image ?   
+        if row[2] != None:
+            result.append(1)
+        else:
+            result.append(0)
+        # Has a location
+        if row[3] != None:
+            result.append(1)
+        else:
+            result.append(0)
+        # Has a description (bio)
+        if row[4] != None:
+            result.append(1)
+        else:
+            result.append(0)
+        # Has a url
+        if row[5] != None:
+            result.append(1)
+        else:
+            result.append(0)
+        # Is in a list
+        if row[6] != 0:
+            result.append(1)
+        else:
+            result.append(0)
+        # Has 30 follower or more
+        if row[7] >= 30:
+            result.append(1)
+        else:
+            result.append(0)
+        # Has 50 tweet or more
+        if row[8] >= 50:
+            result.append(1)
+        else:
+            result.append(0)
+        # Has at least twice the number of follower as friends
+        if row[7] * 2 >= row[9]:
+            result.append(1)
+        else:
+            result.append(0)
+            
+
+        #State of search
+        #
+
+        #Socialbakers
+
+        #Stringhini et al.
+        #Number of follower
+        #result.append(row[7])
+        #Number of tweet
+        #result.append(row[8])
+        #Yang et al.
+        #Added features
+        
         results.append(result)
     return results
-
+        
+    
 if __name__ == "__main__":
     con = sqlite3.connect("db.sqlite")
     cur = con.cursor()
@@ -50,12 +110,29 @@ if __name__ == "__main__":
     bas_uid, bas_target = gen_target_array()
     bas_training = gen_training_features(cur, bas_uid)
     
+
+    
+    #test_utils.print_data_sets(bas_training,bas_target)
+    test_utils.eval_useful(9-1, bas_training)
+    
     evaluator = Eval(bas_training, bas_target)
+    
+    
+    
+    print("svm")
     print(evaluator.svm())
+    print("tree")
     print(evaluator.tree())
+    print("forest")
     print(evaluator.forest())
+    print("linear_regression")
     print(evaluator.linear_regression())
-    #print(evaluator.neighbors()) bug
+    """
+    c'est cassé pour l'instant
+    print("neighbors")
+    print(evaluator.neighbors()) 
+    """
+    print("adaBoost")
     print(evaluator.adaBoost())
     
     """

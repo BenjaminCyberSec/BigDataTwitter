@@ -5,3 +5,6 @@ TFP/
 TWT/
 __pycache__/
 db.sqlite
+.idea/
+.ipynb_checkpoints/
+*.ipynb

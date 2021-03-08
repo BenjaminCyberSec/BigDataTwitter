@@ -15,6 +15,7 @@ from sklearn.ensemble import AdaBoostClassifier
 from sklearn.model_selection import KFold
 import numpy as np
 from statistics import mean 
+import test_utils
 
 
 def evaluate_all( clf, training, target, nbr_folds):
@@ -23,6 +24,8 @@ def evaluate_all( clf, training, target, nbr_folds):
     
     kf = KFold(n_splits=nbr_folds)
     kf.get_n_splits(training)
+    
+    
     
     recall_t = []
     precision_t = []
@@ -41,23 +44,29 @@ def evaluate_all( clf, training, target, nbr_folds):
         clf.fit(X_train,y_train )
         result = clf.predict(X_test)
         
-        #recall = metrics.recall_score(y_test, result)
+        test_utils.analyse_result(result)
+        
+        """
+         UndefinedMetricWarning: Recall is ill-defined and being set to 0.0 due to no true samples. Use `zero_division` parameter to control this behavior.
+        """
+        recall = metrics.recall_score(y_test, result, zero_division=0) #zero_division= remove the warning
         precision = metrics.precision_score(y_test, result)
         accuracy = metrics.accuracy_score(y_test, result)
         f1_score = metrics.f1_score(y_test, result)
+        """
+        RuntimeWarning: invalid value encountered in double_scalars mcc = cov_ytyp / np.sqrt(cov_ytyt * cov_ypyp)
+        """
         #matthews_corrcoef = metrics.matthews_corrcoef(y_test, result)
         
-        #recall_t.append(recall)
-        recall_t.append(0)
+        recall_t.append(recall)
         precision_t.append(precision)
-        #precision_t.append(0)
         accuracy_t.append(accuracy)
         f1_score_t.append(f1_score)
         #mc_t.append(matthews_corrcoef)
         mc_t.append(0)
-        
+
     
-    return {'recall':recall_t, 'precision': precision_t, 'accuracy': accuracy_t, 'f1_score': f1_score_t, 'mc': mc_t}
+    return {'precision': precision_t, 'accuracy': accuracy_t, 'f1_score': f1_score_t, 'recall':recall_t, 'mc': mc_t}
 
 
 class Eval:
@@ -81,7 +90,6 @@ class Eval:
         return self.concat_dict(dic)
     
     def svm(self):
-        print("svm")
         return self.kfold_eval(svm.SVC(kernel='linear', C=1, random_state=42))
     
     def tree(self):
@@ -90,7 +98,7 @@ class Eval:
             porcent_of_success = clf.score(bas_training, bas_target)
             tree.plot_tree(clf.fit(bas_training,  bas_target)) #build the tree
         """
-        return self.kfold_eval(tree.DecisionTreeClassifier(criterion='entropy', min_impurity_decrease=0.03))
+        return self.kfold_eval(tree.DecisionTreeClassifier(criterion='entropy',   min_impurity_decrease=0.03, min_samples_leaf=1))
     
     def forest(self):
         return self.kfold_eval(RandomForestClassifier(n_estimators=100))
@@ -105,5 +113,5 @@ class Eval:
         return self.kfold_eval(NearestNeighbors(n_neighbors=2, algorithm='ball_tree'))
     
     def adaBoost(self):
-        return self.kfold_eval(AdaBoostClassifier(n_estimators=100, random_state=0))
+        return self.kfold_eval(AdaBoostClassifier(n_estimators=100,learning_rate=1.0, random_state=0))
     
