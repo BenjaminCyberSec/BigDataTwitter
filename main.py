@@ -105,7 +105,7 @@ if __name__ == "__main__":
     print("linear_regression")
     print(evaluator.linear_regression())
     print("neighbors")
-    print(evaluator.neighbors()) 
+    #print(evaluator.neighbors())
     print("adaBoost")
     print(evaluator.adaBoost())
     
