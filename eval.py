@@ -41,17 +41,20 @@ def evaluate_all( clf, training, target, nbr_folds):
         clf.fit(X_train,y_train )
         result = clf.predict(X_test)
         
-        recall = metrics.recall_score(y_test, result)
+        #recall = metrics.recall_score(y_test, result)
         precision = metrics.precision_score(y_test, result)
         accuracy = metrics.accuracy_score(y_test, result)
         f1_score = metrics.f1_score(y_test, result)
-        matthews_corrcoef = metrics.matthews_corrcoef(y_test, result)
+        #matthews_corrcoef = metrics.matthews_corrcoef(y_test, result)
         
-        recall_t.append(recall)
+        #recall_t.append(recall)
+        recall_t.append(0)
         precision_t.append(precision)
+        #precision_t.append(0)
         accuracy_t.append(accuracy)
         f1_score_t.append(f1_score)
-        mc_t.append(matthews_corrcoef)
+        #mc_t.append(matthews_corrcoef)
+        mc_t.append(0)
         
     
     return {'recall':recall_t, 'precision': precision_t, 'accuracy': accuracy_t, 'f1_score': f1_score_t, 'mc': mc_t}
