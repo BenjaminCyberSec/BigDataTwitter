@@ -7,6 +7,8 @@ Created on Fri Feb 26 17:45:01 2021
 
 
 import sqlite3
+
+from features import select_features, check_feature
 from load_db import gen_database
 from gen_dataset import gen_target_array
 from sklearn.model_selection import KFold
@@ -30,63 +32,23 @@ Returne a table witch, foreach uid, list the features described in the study in 
     the table matches the index of base_uid and base_target
     format: [[0,1,0][1,1,1]]
 """
+feature_Classe_A = ['name', 'profile_use_background_image', 'location', 'description', 'url', 'listed_count', 'followers_count', 'statuses_count', 'friends_count']
+
+
 def gen_training_features(cur,bas_uid):
     ########
     # TODO
     #######
-    
+
     #has_name, has_image, has_address
     results = []
     for uid in bas_uid:
-        cur.execute("SELECT id, name, profile_use_background_image, location, description, url, listed_count, followers_count, statuses_count, friends_count FROM users WHERE id = ?;", (uid,))
+        cur.execute(select_features(feature_Classe_A), (uid,))
         row = cur.fetchone()
         result = []
-        #for i in range(1,11):
-        # Has a name ?
-        if row[1] != None:
-            result.append(1)
-        else:
-            result.append(0)
-        # Has a background_image ?
-        if row[2] != None:
-            result.append(1)
-        else:
-            result.append(0)
-        # Has a location
-        if row[3] != None:
-            result.append(1)
-        else:
-            result.append(0)
-        # Has a description (bio)
-        if row[4] != None:
-            result.append(1)
-        else:
-            result.append(0)
-        # Has a url
-        if row[5] != None:
-            result.append(1)
-        else:
-            result.append(0)
-        # Is in a list
-        if row[6] != 0:
-            result.append(1)
-        else:
-            result.append(0)
-        # Has 30 follower or more
-        if row[7] >= 30:
-            result.append(1)
-        else:
-            result.append(0)
-        # Has 50 tweet or more
-        if row[8] >= 50:
-            result.append(1)
-        else:
-            result.append(0)
-        # Has at least twice the number of follower as friends
-        if row[7] * 2 >= row[9]:
-            result.append(1)
-        else:
-            result.append(0)
+
+        for key, value in check_feature(row).items():
+            result.append(value)
 
         results.append(result)
     return results
@@ -94,10 +56,10 @@ def gen_training_features(cur,bas_uid):
 if __name__ == "__main__":
     con = sqlite3.connect("db.sqlite")
     cur = con.cursor()
-    
+
     #gen database can be commented if the database has already been created, code is in another file
     #gen_database(con)
-    
+
     bas_uid, bas_target = gen_target_array()
     bas_training = gen_training_features(cur, bas_uid)
     #print(bas_uid)
@@ -114,10 +76,12 @@ if __name__ == "__main__":
     print("linear_regression")
     print(evaluator.linear_regression())
     print("neighbors")
-    #print(evaluator.neighbors())
+    print(evaluator.neighbors())
     print("adaBoost")
     print(evaluator.adaBoost())
-    
+
+
+
     """
     Résultat KO (voir featurs, voir algo parameter, voir concatenation & score)
         0.5210394832245732
@@ -126,9 +90,9 @@ if __name__ == "__main__":
         0.5210394832245732
         0.5210394832245732
     """
-    
+
     con.close()
-    
+
 """
 Syntaxe:
     pour parcourir deux listes dont l'indexe correspond: for uid, target in zip(bas_uid, bas_target):
@@ -143,4 +107,3 @@ Doc:
 Anaconda:
     To see the plot, look at the square on the top right corner and select "plots" view instead of "help"
 """
-    
