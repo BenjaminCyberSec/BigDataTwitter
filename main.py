@@ -8,20 +8,8 @@ Created on Fri Feb 26 17:45:01 2021
 import sqlite3
 
 from features import select_features, feature_A_CAMISANI_CALZOLARI
-from load_db import gen_database
 from gen_dataset import gen_target_array
-from sklearn.model_selection import KFold
-import numpy as np
 from eval import Eval
-
-from sklearn.cluster import KMeans
-from sklearn import preprocessing
-from sklearn import neighbors
-from sklearn.model_selection import train_test_split
-from sklearn.neighbors import KNeighborsClassifier
-import os
-from utils import *
-from tsne import *
 from visualisation import save_results
 
 """
@@ -75,34 +63,27 @@ if __name__ == "__main__":
 
     for class_, value in class_and_author.items():
         results_evaluator[class_] = dict()
-        print("###### CLASSE : "+class_ + " ######")
 
         for author, specific_feature in value.items():
             results_evaluator[class_][author] = dict()
 
-            print("******** AUTHOR : "+ author +" ************" )
             bas_training = gen_training_features(cur, bas_uid, specific_feature)
             evaluator = Eval(bas_training, bas_target)
 
             for algo in algos:
+                print("process...")
                 results_evaluator[class_][author][algo] = dict()
                 if algo == "svm":
-                    print("--------- AlGO : " + algo + " -----------------")
                     results_evaluator[class_][author][algo] = evaluator.svm()
                 elif algo == "tree":
-                    print("--------- AlGO : " + algo + " -----------------")
                     results_evaluator[class_][author][algo] = evaluator.tree()
                 elif algo == "forest":
-                    print("--------- AlGO : " + algo + " -----------------")
                     results_evaluator[class_][author][algo] = evaluator.forest()
                 elif algo == "linear_regression":
-                    print("--------- AlGO : " + algo + " -----------------")
                     results_evaluator[class_][author][algo] = evaluator.linear_regression()
                 elif algo == "neighbors":
-                    print("--------- AlGO : " + algo + " -----------------")
                     results_evaluator[class_][author][algo] = evaluator.neighbors()
                 elif algo == "adaBoost":
-                    print("--------- AlGO : " + algo + " -----------------")
                     results_evaluator[class_][author][algo] = evaluator.adaBoost()
 
     save_results(results_evaluator)
