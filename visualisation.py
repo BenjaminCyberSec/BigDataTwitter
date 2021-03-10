@@ -13,7 +13,7 @@ def save_results(dictionary_results):
 
     with open('SaveResult' + os.sep + 'results_evaluator.txt', 'w') as fichier:
         fichier.write(
-            '\n\n' * 3 + ' ' * 8 + 'Tableau_2: estimation du niveau de proximiter entre les pays en fonction des caractiristique   \n\n+' + "-" * li + "+\n")
+            '\n\n' * 3 + ' ' * 8 + 'Table: Performance comparison for 10-fold cross validation. Training set: BAS   \n\n+' + "-" * li + "+\n")
 
         fichier.write(
             "|Class type | Author " + " " * 15 + "|" + " " * 31 + " evaluation  metrics " + " " * 38 + " | \n+" + "-" * li + "+")
