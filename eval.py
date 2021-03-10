@@ -10,7 +10,7 @@ from sklearn import tree
 from sklearn.ensemble import RandomForestClassifier
 from sklearn import metrics
 from sklearn import linear_model
-from sklearn.neighbors import NearestNeighbors
+from sklearn.neighbors import NearestNeighbors, KNeighborsClassifier
 from sklearn.ensemble import AdaBoostClassifier
 from sklearn.model_selection import KFold
 import numpy as np
@@ -107,10 +107,7 @@ class Eval:
         return self.kfold_eval(linear_model.LogisticRegression())
     
     def neighbors(self):
-        """
-        TypeError: If no scoring is specified, the estimator passed should have a 'score' method. The estimator NearestNeighbors(algorithm='ball_tree', n_neighbors=2) does not.
-        """
-        return self.kfold_eval(NearestNeighbors(n_neighbors=2, algorithm='ball_tree'))
+        return self.kfold_eval(KNeighborsClassifier(n_neighbors=2, algorithm='ball_tree'))
     
     def adaBoost(self):
         return self.kfold_eval(AdaBoostClassifier(n_estimators=100,learning_rate=1.0, random_state=0))
