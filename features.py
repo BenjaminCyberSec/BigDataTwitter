@@ -3,12 +3,6 @@
 @author: Bergé Benjamin, Wathelet Jolan, Anicet
 """
 
-import csv
-import numpy as np
-import random
-import os
-
-
 """
 requete préparé pour selectionner les donner dans la base avec une liste bien défini de colonnes 
 """
@@ -84,6 +78,10 @@ def feature_A_CAMISANI_CALZOLARI(value_feature):
 
 def feature_A_SATTE_OF_SEARCH(value_feature):
     features = {}
+
+    ########
+    # TODO : a completer. pour cet autheur et cette classe,  mettre les bon feature defini dans l'article. remplcer egalement dans celle du dictionnaire "class_and_author{}"
+    #######
     features['Has_name'] = has_name(value_feature)
     features['Has_background_image'] = has_background_image(value_feature)
     features['Has_location'] = has_location(value_feature)
@@ -97,6 +95,10 @@ def feature_A_SATTE_OF_SEARCH(value_feature):
 
 def feature_A_STRINGHINI(value_feature):
     features = {}
+
+    ########
+    # TODO : a completer. pour cet autheur et cette classe,  mettre les bon feature defini dans l'article. remplcer egalement dans celle du dictionnaire "class_and_author{}"
+    #######
     features['Has_name'] = has_name(value_feature)
     features['Has_background_image'] = has_background_image(value_feature)
     features['Has_location'] = has_location(value_feature)
@@ -110,6 +112,10 @@ def feature_A_STRINGHINI(value_feature):
 
 def feature_A_SACIALBAKERS(value_feature):
     features = {}
+
+    ########
+    # TODO : a completer. pour cet autheur et cette classe,  mettre les bon feature defini dans l'article. remplcer egalement dans celle du dictionnaire "class_and_author{}"
+    #######
     features['Has_name'] = has_name(value_feature)
     features['Has_background_image'] = has_background_image(value_feature)
     features['Has_location'] = has_location(value_feature)
@@ -123,6 +129,10 @@ def feature_A_SACIALBAKERS(value_feature):
 
 def feature_A_YANG_AND_AL(value_feature):
     features = {}
+
+    ########
+    # TODO : a completer. pour cet autheur et cette classe,  mettre les bon feature defini dans l'article. remplcer egalement dans celle du dictionnaire "class_and_author{}"
+    #######
     features['Has_name'] = has_name(value_feature)
     features['Has_background_image'] = has_background_image(value_feature)
     features['Has_location'] = has_location(value_feature)
@@ -141,6 +151,10 @@ def feature_A_YANG_AND_AL(value_feature):
 
 def feature_B_CAMISANI_CALZOLARI(value_feature):
     features = {}
+
+    ########
+    # TODO : a completer. pour cet autheur et cette classe,  mettre les bon feature defini dans l'article. remplcer egalement dans celle du dictionnaire "class_and_author{}"
+    #######
     features['Has_name'] = has_name(value_feature)
     features['Has_background_image'] = has_background_image(value_feature)
     features['Has_location'] = has_location(value_feature)
@@ -154,6 +168,10 @@ def feature_B_CAMISANI_CALZOLARI(value_feature):
 
 def feature_B_SATTE_OF_SEARCH(value_feature):
     features = {}
+
+    ########
+    # TODO : a completer. pour cet autheur et cette classe,  mettre les bon feature defini dans l'article. remplcer egalement dans celle du dictionnaire "class_and_author{}"
+    #######
     features['Has_name'] = has_name(value_feature)
     features['Has_background_image'] = has_background_image(value_feature)
     features['Has_location'] = has_location(value_feature)
@@ -167,6 +185,10 @@ def feature_B_SATTE_OF_SEARCH(value_feature):
 
 def feature_B_STRINGHINI(value_feature):
     features = {}
+
+    ########
+    # TODO : a completer. pour cet autheur et cette classe,  mettre les bon feature defini dans l'article. remplcer egalement dans celle du dictionnaire "class_and_author{}"
+    #######
     features['Has_name'] = has_name(value_feature)
     features['Has_background_image'] = has_background_image(value_feature)
     features['Has_location'] = has_location(value_feature)
@@ -180,6 +202,10 @@ def feature_B_STRINGHINI(value_feature):
 
 def feature_B_SACIALBAKERS(value_feature):
     features = {}
+
+    ########
+    # TODO : a completer. pour cet autheur et cette classe,  mettre les bon feature defini dans l'article. remplcer egalement dans celle du dictionnaire "class_and_author{}"
+    #######
     features['Has_name'] = has_name(value_feature)
     features['Has_background_image'] = has_background_image(value_feature)
     features['Has_location'] = has_location(value_feature)
@@ -193,6 +219,10 @@ def feature_B_SACIALBAKERS(value_feature):
 
 def feature_B_YANG_AND_AL(value_feature):
     features = {}
+
+    ########
+    # TODO : a completer. pour cet autheur et cette classe,  mettre les bon feature defini dans l'article. remplcer egalement dans celle du dictionnaire "class_and_author{}"
+    #######
     features['Has_name'] = has_name(value_feature)
     features['Has_background_image'] = has_background_image(value_feature)
     features['Has_location'] = has_location(value_feature)
@@ -211,6 +241,10 @@ def feature_B_YANG_AND_AL(value_feature):
 
 def feature_C_YANG_AND_AL(value_feature):
     features = {}
+
+    ########
+    # TODO : a completer. pour cet autheur et cette classe,  mettre les bon feature defini dans l'article. remplcer egalement dans celle du dictionnaire "class_and_author{}"
+    #######
     features['Has_name'] = has_name(value_feature)
     features['Has_background_image'] = has_background_image(value_feature)
     features['Has_location'] = has_location(value_feature)
