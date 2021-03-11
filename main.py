@@ -11,8 +11,10 @@ from features import select_features, feature_A_CAMISANI_CALZOLARI
 from gen_dataset import gen_target_array
 from eval import Eval
 from visualisation import save_results
+from load_db import gen_database
 import sys
 import test_utils
+from evaluation_tables import evaluating_features_foreach_author
 
 
 
@@ -22,28 +24,10 @@ Returne a table witch, foreach uid, list the features described in the study in 
     the table matches the index of base_uid and base_target
     format: [[0,1,0][1,1,1]]
 """
-class_and_author = {
-    'A': {'CAMISANI_CALZOLARI':['name', 'profile_use_background_image', 'location', 'description', 'url', 'listed_count', 'followers_count', 'statuses_count', 'friends_count'],
-          'SATTE_OF_SEARCH' : ['name', 'profile_use_background_image', 'location', 'description', 'url', 'listed_count', 'followers_count', 'statuses_count', 'friends_count'],
-          'STRINGHINI':['name', 'profile_use_background_image', 'location', 'description', 'url', 'listed_count', 'followers_count', 'statuses_count', 'friends_count'],
-          'SACIALBAKERS': ['name', 'profile_use_background_image', 'location', 'description', 'url', 'listed_count', 'followers_count', 'statuses_count', 'friends_count'],
-          'YANG_AND_AL':['name', 'profile_use_background_image', 'location', 'description', 'url', 'listed_count', 'followers_count', 'statuses_count', 'friends_count']
-         },
-    'B': {'CAMISANI_CALZOLARI':['name', 'profile_use_background_image', 'location', 'description', 'url', 'listed_count', 'followers_count', 'statuses_count', 'friends_count'],
-          'SATTE_OF_SEARCH' : ['name', 'profile_use_background_image', 'location', 'description', 'url', 'listed_count', 'followers_count', 'statuses_count', 'friends_count'],
-          'STRINGHINI':['name', 'profile_use_background_image', 'location', 'description', 'url', 'listed_count', 'followers_count', 'statuses_count', 'friends_count'],
-          'SACIALBAKERS': ['name', 'profile_use_background_image', 'location', 'description', 'url', 'listed_count', 'followers_count', 'statuses_count', 'friends_count'],
-          'YANG_AND_AL':['name', 'profile_use_background_image', 'location', 'description', 'url', 'listed_count', 'followers_count', 'statuses_count', 'friends_count']
-         },
-    'C': {'YANG_AND_AL': ['name', 'profile_use_background_image', 'location', 'description', 'url', 'listed_count', 'followers_count', 'statuses_count', 'friends_count']} }
 
 
 
 def gen_training_features(cur, bas_uid, specific_feature):
-    ########
-    # TODO
-    #######
-
     results = []
 
     for uid in bas_uid:
@@ -61,64 +45,37 @@ def gen_training_features(cur, bas_uid, specific_feature):
 
 
 
+def printing_table_16(bas_uid, bas_target, cur):
+    features = ['name', 'profile_use_background_image', 'location', 'description', 'url', 'listed_count', 'followers_count', 'statuses_count', 'friends_count']
+    bas_training = gen_training_features(cur, bas_uid, features)
+    evaluator = Eval(bas_training, bas_target)
+    print("svm")
+    print(evaluator.svm())
+    print("tree")
+    print(evaluator.tree())
+    print("forest")
+    print(evaluator.forest())
+    print("linear_regression")
+    print(evaluator.linear_regression())
+    """
+    c'est cassé pour l'instant
+    print("neighbors")
+    print(evaluator.neighbors()) 
+    """
+    print("adaBoost")
+    print(evaluator.adaBoost())
+
 if __name__ == "__main__":
     con = sqlite3.connect("db.sqlite")
     cur = con.cursor()
+    #/!\ do not remove this line, it builds the db
+    #gen_database(con)
     bas_uid, bas_target = gen_target_array()
-    results_evaluator = {}
-    algos = ['svm', 'tree', 'forest', 'linear_regression', 'neighbors', 'adaBoost']
-
-    for class_, value in class_and_author.items():
-        results_evaluator[class_] = dict()
-
-        for author, specific_feature in value.items():
-            results_evaluator[class_][author] = dict()
-
-            bas_training = gen_training_features(cur, bas_uid, specific_feature)
-            evaluator = Eval(bas_training, bas_target)
-
-            for algo in algos:
-                print("process...")
-                results_evaluator[class_][author][algo] = dict()
-                if algo == "svm":
-                    results_evaluator[class_][author][algo] = evaluator.svm()
-                elif algo == "tree":
-                    results_evaluator[class_][author][algo] = evaluator.tree()
-                elif algo == "forest":
-                    results_evaluator[class_][author][algo] = evaluator.forest()
-                elif algo == "linear_regression":
-                    results_evaluator[class_][author][algo] = evaluator.linear_regression()
-                elif algo == "neighbors":
-                    results_evaluator[class_][author][algo] = evaluator.neighbors()
-                elif algo == "adaBoost":
-                    results_evaluator[class_][author][algo] = evaluator.adaBoost()
-
-    save_results(results_evaluator)
-
-
-
-    """
-    Résultat KO (voir featurs, voir algo parameter, voir concatenation & score)
-        0.5210394832245732
-        0.5002570694087403
-        0.5210394832245732
-        0.5210394832245732
-        0.5210394832245732
-    """
-
+    
+    #evaluating_features_foreach_author(bas_uid, bas_target, cur, ['svm', 'tree', 'forest', 'linear_regression', 'neighbors', 'adaBoost'],'SaveResult','results_evaluator.txt')
+    
+    printing_table_16(bas_uid, bas_target, cur)
+    
     con.close()
 
-"""
-Syntaxe:
-    pour parcourir deux listes dont l'indexe correspond: for uid, target in zip(bas_uid, bas_target):
 
-Possible amélioration:
-    pour gen features, store les queries: 
-            https://stackoverflow.com/questions/30218963/storing-sql-statements-in-a-properties-file-to-be-used-by-python-scripts/30219756
-            
-Doc:
-    https://scikit-learn.org/stable/modules/generated/sklearn.tree.DecisionTreeClassifier.html
-    
-Anaconda:
-    To see the plot, look at the square on the top right corner and select "plots" view instead of "help"
-"""

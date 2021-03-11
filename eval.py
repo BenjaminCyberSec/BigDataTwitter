@@ -44,11 +44,12 @@ def evaluate_all( clf, training, target, nbr_folds):
         clf.fit(X_train,y_train )
         result = clf.predict(X_test)
         
-        test_utils.analyse_result(result)
+        #test_utils.analyse_result(result)
         
         """
          UndefinedMetricWarning: Recall is ill-defined and being set to 0.0 due to no true samples. Use `zero_division` parameter to control this behavior.
         """
+        #When true positive + false negative == 0, recall returns 0 and raises UndefinedMetricWarning. This behavior can be modified with zero_division.
         recall = metrics.recall_score(y_test, result, zero_division=0) #zero_division= remove the warning
         precision = metrics.precision_score(y_test, result)
         accuracy = metrics.accuracy_score(y_test, result)

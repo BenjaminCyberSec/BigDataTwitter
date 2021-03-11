@@ -4,14 +4,11 @@
 """
 import os
 
-"""
-"""
-
-def save_results(dictionary_results):
+def save_results(dictionary_results, path='SaveResult', filename='results_evaluator.txt'):
     li = 173
     sli = 137
 
-    with open('SaveResult' + os.sep + 'results_evaluator.txt', 'w') as fichier:
+    with open(path + os.sep +filename , 'w') as fichier:
         fichier.write(
             '\n\n' * 3 + ' ' * 8 + 'Table: Performance comparison for 10-fold cross validation. Training set: BAS   \n\n+' + "-" * li + "+\n")
 
@@ -32,5 +29,6 @@ def save_results(dictionary_results):
                     for performance_name, value in performance.items():
                         fichier.write("| %20s " % (value))
                     fichier.write("|\n|" + " " * 35 + "+" + "-" * sli + "+ \n")
-                    fichier.write("|" + " " * 35)
+                    #fichier.write("|" + " " * 35)
+                    fichier.write("|       %3s" % (' '))
             fichier.write("|\n#" + "#" * li + "#")

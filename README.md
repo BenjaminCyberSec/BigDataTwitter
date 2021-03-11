@@ -7,3 +7,5 @@ Add csv files in folders:
 .INT/
 .TFP/
 .TWT/
+
+Sckitlearn version 2.4.1
