@@ -96,8 +96,8 @@ class Eval:
         """
         return self.kfold_eval(tree.DecisionTreeClassifier(criterion='entropy',   min_impurity_decrease=0.03, min_samples_leaf=1))
     
-    def forest(self):
-        return self.kfold_eval(RandomForestClassifier(n_estimators=100))
+    def forest(self, tree_size=100, max_depth=None, min_samples_split=2, min_impurity_decrease=0.0):
+        return self.kfold_eval(RandomForestClassifier(n_estimators=tree_size,max_depth=max_depth, min_samples_split=min_samples_split, min_impurity_decrease=min_impurity_decrease))
    
     def linear_regression(self):
         return self.kfold_eval(linear_model.LogisticRegression())

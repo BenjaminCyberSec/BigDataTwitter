@@ -5,6 +5,8 @@ Created on Fri Mar 12 00:41:57 2021
 @author: benja
 """
 
+from main import gen_training_features
+
 class_and_author = {
     'A': {'CAMISANI_CALZOLARI':['name', 'profile_use_background_image', 'location', 'description', 'url', 'listed_count', 'followers_count', 'statuses_count', 'friends_count'],
           'SATTE_OF_SEARCH' : ['followers_count', 'friends_count'],
@@ -24,7 +26,7 @@ class_and_author = {
     """
 
 
-def evaluating_features_foreach_author(bas_uid, bas_target,cur,algos,path,filename):
+def evaluating_features_foreach_author(bas_uid, bas_target,cur,algos,features,path,filename):
     results_evaluator = {}
     for class_, value in class_and_author.items():
         results_evaluator[class_] = dict()

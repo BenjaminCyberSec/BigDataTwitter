@@ -5,6 +5,7 @@ Created on Mon Mar  8 18:20:37 2021
 @author: Benjamin
 """
 
+
 def print_data_sets(bas_training, bas_target):
     #print(len(bas_training))
     #print(len(bas_target))
@@ -59,4 +60,22 @@ def analyse_result(result):
         else:
             count_1 = count_1 +1
     print('The algo predicted %s bots and %s humans' % (count_0,count_1) )
+    
+def test_forest(bas_uid, bas_target):
+    evaluator = Eval(bas_training, bas_target)
+    #76 is the best max_depth
+    for i in range(1,10):
+        j = i/10
+        # tree_size=j, max_depth=None, min_samples_split=2, min_impurity_decrease=0.0
+        dic=evaluator.forest(min_impurity_decrease=j)
+        print('%2f: precision: %2f accuracy: %2f f1_score: %2f  recall: %2f mc: %2f ' % (j, dic['precision'], dic['accuracy'], dic['f1_score'], dic['recall'], dic['mc']))
+
+def test_svm(bas_uid, bas_target):
+    evaluator = Eval(bas_training, bas_target)
+    #76 is the best max_depth
+    for i in range(1,10):
+        j = i/10
+        # tree_size=j, max_depth=None, min_samples_split=2, min_impurity_decrease=0.0
+        dic=evaluator.forest(min_impurity_decrease=j)
+        print('%2f: precision: %2f accuracy: %2f f1_score: %2f  recall: %2f mc: %2f ' % (j, dic['precision'], dic['accuracy'], dic['f1_score'], dic['recall'], dic['mc']))
         

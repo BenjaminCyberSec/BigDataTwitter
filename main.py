@@ -14,7 +14,7 @@ from visualisation import save_results
 from load_db import gen_database
 import sys
 import test_utils
-from evaluation_tables import evaluating_features_foreach_author
+import evaluation_tables
 
 
 
@@ -45,25 +45,21 @@ def gen_training_features(cur, bas_uid, specific_feature):
 
 
 
-def printing_table_16(bas_uid, bas_target, cur):
-    features = ['name', 'profile_use_background_image', 'location', 'description', 'url', 'listed_count', 'followers_count', 'statuses_count', 'friends_count']
+def printing_table_16(bas_uid, bas_target, cur, features):
+    
     bas_training = gen_training_features(cur, bas_uid, features)
     evaluator = Eval(bas_training, bas_target)
     
     print("svm")
     print(evaluator.svm())
-    print("tree")
-    print(evaluator.tree())
     print("forest")
     print(evaluator.forest())
+    print("tree")
+    print(evaluator.tree())
     print("linear_regression")
     print(evaluator.linear_regression())
-    
-    """
-    c'est cassé pour l'instant
     print("neighbors")
     print(evaluator.neighbors()) 
-    """
     print("adaBoost")
     print(evaluator.adaBoost())
 
@@ -73,11 +69,12 @@ if __name__ == "__main__":
     #/!\ do not remove this line, it builds the db
     #gen_database(con)
     bas_uid, bas_target = gen_target_array()
+    features = ['name', 'profile_use_background_image', 'location', 'description', 'url', 'listed_count', 'followers_count', 'statuses_count', 'friends_count']
     
-    #evaluating_features_foreach_author(bas_uid, bas_target, cur, ['svm', 'tree', 'forest', 'linear_regression', 'neighbors', 'adaBoost'],'SaveResult','results_evaluator.txt')
+    #evaluation_tables.evaluating_features_foreach_author(bas_uid, bas_target, cur, ['svm', 'tree', 'forest', 'linear_regression', 'neighbors', 'adaBoost'],features,'SaveResult','results_evaluator.txt')
     
-    printing_table_16(bas_uid, bas_target, cur)
-    
+    printing_table_16(bas_uid, bas_target, cur, features)
+    #test_utils.test_forest(bas_uid, bas_target)
     con.close()
 
 
