@@ -22,10 +22,8 @@ def evaluate_all( clf, training, target, nbr_folds):
     training = np.array(training)
     target = np.array(target)
     
-    kf = KFold(n_splits=nbr_folds)
+    kf = KFold(n_splits=nbr_folds, shuffle=True)
     kf.get_n_splits(training)
-    
-    
     
     recall_t = []
     precision_t = []
@@ -54,17 +52,14 @@ def evaluate_all( clf, training, target, nbr_folds):
         precision = metrics.precision_score(y_test, result)
         accuracy = metrics.accuracy_score(y_test, result)
         f1_score = metrics.f1_score(y_test, result)
-        """
-        RuntimeWarning: invalid value encountered in double_scalars mcc = cov_ytyp / np.sqrt(cov_ytyt * cov_ypyp)
-        """
-        #matthews_corrcoef = metrics.matthews_corrcoef(y_test, result)
+        matthews_corrcoef = metrics.matthews_corrcoef(y_test, result)
         
         recall_t.append(recall)
         precision_t.append(precision)
         accuracy_t.append(accuracy)
         f1_score_t.append(f1_score)
-        #mc_t.append(matthews_corrcoef)
-        mc_t.append(0)
+        mc_t.append(matthews_corrcoef)
+
 
     
     return {'precision': precision_t, 'accuracy': accuracy_t, 'f1_score': f1_score_t, 'recall':recall_t, 'mc': mc_t}

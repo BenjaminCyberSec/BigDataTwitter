@@ -49,6 +49,7 @@ def printing_table_16(bas_uid, bas_target, cur):
     features = ['name', 'profile_use_background_image', 'location', 'description', 'url', 'listed_count', 'followers_count', 'statuses_count', 'friends_count']
     bas_training = gen_training_features(cur, bas_uid, features)
     evaluator = Eval(bas_training, bas_target)
+    
     print("svm")
     print(evaluator.svm())
     print("tree")
@@ -57,6 +58,7 @@ def printing_table_16(bas_uid, bas_target, cur):
     print(evaluator.forest())
     print("linear_regression")
     print(evaluator.linear_regression())
+    
     """
     c'est cassé pour l'instant
     print("neighbors")
