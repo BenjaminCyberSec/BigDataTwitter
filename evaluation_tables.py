@@ -6,16 +6,17 @@ Created on Fri Mar 12 00:41:57 2021
 """
 
 from main import gen_training_features
+from eval import Eval
+from visualisation import save_results
 
 class_and_author = {
     'A': {'CAMISANI_CALZOLARI':['name', 'profile_use_background_image', 'location', 'description', 'url', 'listed_count', 'followers_count', 'statuses_count', 'friends_count'],
-          'SATTE_OF_SEARCH' : ['followers_count', 'friends_count'],
-          'STRINGHINI':['statuses_count', 'friends_count'],
-          'SACIALBAKERS': [ 'default_profile_image', 'location', 'description',  'followers_count', 'statuses_count', 'friends_count']
-         }
-    }
-"""
-
+          'SATTE_OF_SEARCH' : ['name', 'profile_use_background_image', 'location', 'description', 'url', 'listed_count', 'followers_count', 'statuses_count', 'friends_count'],
+          'STRINGHINI':['name', 'profile_use_background_image', 'location', 'description', 'url', 'listed_count', 'followers_count', 'statuses_count', 'friends_count'],
+          'SACIALBAKERS': ['name', 'profile_use_background_image', 'location', 'description', 'url', 'listed_count', 'followers_count', 'statuses_count', 'friends_count'],
+          'YANG_AND_AL':['name', 'profile_use_background_image', 'location', 'description', 'url', 'listed_count', 'followers_count', 'statuses_count', 'friends_count']
+         },
+    
     'B': {'CAMISANI_CALZOLARI':['name', 'profile_use_background_image', 'location', 'description', 'url', 'listed_count', 'followers_count', 'statuses_count', 'friends_count'],
           'SATTE_OF_SEARCH' : ['name', 'profile_use_background_image', 'location', 'description', 'url', 'listed_count', 'followers_count', 'statuses_count', 'friends_count'],
           'STRINGHINI':['name', 'profile_use_background_image', 'location', 'description', 'url', 'listed_count', 'followers_count', 'statuses_count', 'friends_count'],
@@ -23,7 +24,7 @@ class_and_author = {
           'YANG_AND_AL':['name', 'profile_use_background_image', 'location', 'description', 'url', 'listed_count', 'followers_count', 'statuses_count', 'friends_count']
          },
     'C': {'YANG_AND_AL': ['name', 'profile_use_background_image', 'location', 'description', 'url', 'listed_count', 'followers_count', 'statuses_count', 'friends_count']}
-    """
+    }
 
 
 def evaluating_features_foreach_author(bas_uid, bas_target,cur,algos,features,path,filename):

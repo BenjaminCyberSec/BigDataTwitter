@@ -30,6 +30,7 @@ def evaluate_all( clf, training, target, nbr_folds):
     accuracy_t = []
     f1_score_t = []
     mc_t = []
+    auc_t = []
     for train_index, test_index in kf.split(training):
         X_train, X_test = training[train_index], training[test_index]
         y_train, y_test = target[train_index], target[test_index]
@@ -42,27 +43,23 @@ def evaluate_all( clf, training, target, nbr_folds):
         clf.fit(X_train,y_train )
         result = clf.predict(X_test)
         
-        #test_utils.analyse_result(result)
-        
-        """
-         UndefinedMetricWarning: Recall is ill-defined and being set to 0.0 due to no true samples. Use `zero_division` parameter to control this behavior.
-        """
-        #When true positive + false negative == 0, recall returns 0 and raises UndefinedMetricWarning. This behavior can be modified with zero_division.
-        recall = metrics.recall_score(y_test, result, zero_division=0) #zero_division= remove the warning
+        recall = metrics.recall_score(y_test, result)
         precision = metrics.precision_score(y_test, result)
         accuracy = metrics.accuracy_score(y_test, result)
         f1_score = metrics.f1_score(y_test, result)
         matthews_corrcoef = metrics.matthews_corrcoef(y_test, result)
+        fpr, tpr, thresholds = metrics.roc_curve(y_test, result)
+        auc = metrics.auc(fpr, tpr)
         
         recall_t.append(recall)
         precision_t.append(precision)
         accuracy_t.append(accuracy)
         f1_score_t.append(f1_score)
         mc_t.append(matthews_corrcoef)
-
+        auc_t.append(auc)
 
     
-    return {'precision': precision_t, 'accuracy': accuracy_t, 'f1_score': f1_score_t, 'recall':recall_t, 'mc': mc_t}
+    return {'precision': precision_t, 'accuracy': accuracy_t, 'f1_score': f1_score_t, 'recall':recall_t, 'mc': mc_t, 'auc':auc_t }
 
 
 class Eval:
@@ -79,9 +76,6 @@ class Eval:
     
     
     def kfold_eval(self, classifier):
-        #scores = cross_val_score(classifier, self.bas_training, self.bas_target, cv=self.nbr_folds)
-        #return self.concat_score(scores)
-        
         dic = evaluate_all(classifier, self.bas_training, self.bas_target, self.nbr_folds)
         return self.concat_dict(dic)
     
@@ -89,11 +83,6 @@ class Eval:
         return self.kfold_eval(svm.SVC(kernel='linear', C=1, random_state=42))
     
     def tree(self):
-        """
-        peut construire graph pour choisir les meilleurs params: 
-            porcent_of_success = clf.score(bas_training, bas_target)
-            tree.plot_tree(clf.fit(bas_training,  bas_target)) #build the tree
-        """
         return self.kfold_eval(tree.DecisionTreeClassifier(criterion='entropy',   min_impurity_decrease=0.03, min_samples_leaf=1))
     
     def forest(self, tree_size=100, max_depth=None, min_samples_split=2, min_impurity_decrease=0.0):

@@ -282,7 +282,7 @@ def has_background_image(value_feature):
 
 # Has a location
 def has_location(value_feature):
-    if value_feature[3] is not None:
+    if len(value_feature) >= 4 and value_feature[3] is not None:
         result = 1
     else:
         result = 0
@@ -291,7 +291,7 @@ def has_location(value_feature):
 
 # Has a description (bio)
 def has_description(value_feature):
-    if value_feature[4] is not None:
+    if len(value_feature) >= 5 and value_feature[4] is not None:
         result = 1
     else:
         result = 0
@@ -300,7 +300,7 @@ def has_description(value_feature):
 
 # Has a url
 def has_url(value_feature):
-    if value_feature[5] is not None:
+    if len(value_feature) >= 6 and value_feature[5] is not None:
         result = 1
     else:
         result = 0
@@ -309,7 +309,7 @@ def has_url(value_feature):
 
 # Is in a list
 def has_a_list(value_feature):
-    if value_feature[6] is not None:
+    if len(value_feature) >= 7 and value_feature[6] is not None:
         result = 1
     else:
         result = 0
@@ -318,7 +318,7 @@ def has_a_list(value_feature):
 
 # Has 30 follower or more
 def has_more_follower(value_feature, defauld_follower=30):
-    if value_feature[7] >= defauld_follower:
+    if len(value_feature) >= 8 and value_feature[7] >= defauld_follower:
         result = 1
     else:
         result = 0
@@ -327,7 +327,7 @@ def has_more_follower(value_feature, defauld_follower=30):
 
 # Has 50 tweet or more
 def has_more_tweet(value_feature, defauld_tweet=50):
-    if value_feature[8] >= defauld_tweet:
+    if len(value_feature) >= 9 and value_feature[8] >= defauld_tweet:
         result = 1
     else:
         result = 0
@@ -336,7 +336,7 @@ def has_more_tweet(value_feature, defauld_tweet=50):
 
 # Has at least twice the number of follower as friends
 def has_follower_as_friends(value_feature):
-    if value_feature[7] * 2 >= value_feature[9]:
+    if len(value_feature) >= 10 and value_feature[7] * 2 >= value_feature[9]:
         result = 1
     else:
         result = 0
