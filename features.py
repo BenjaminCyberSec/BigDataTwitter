@@ -335,8 +335,8 @@ def has_more_tweet(value_feature, defauld_tweet=50):
 
 
 # Has at least twice the number of follower as friends
-def has_twice_follower_as_friends(value_feature):
-    if value_feature[7] * 2 >= value_feature[9]::
+def has_follower_as_friends(value_feature):
+    if value_feature[7] * 2 >= value_feature[9]:
         result = 1
     else:
         result = 0
