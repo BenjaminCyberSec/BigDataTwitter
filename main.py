@@ -30,16 +30,20 @@ Returne a table witch, foreach uid, list the features described in the study in 
 def gen_training_features(cur, bas_uid, specific_feature):
     results = []
 
-    for uid in bas_uid:
-
-        cur.execute(select_features(specific_feature), (uid,))
-        row = cur.fetchone()
-        result = []
-
-        for key, value in feature_A_CAMISANI_CALZOLARI(row).items():
-            result.append(value)
-
-        results.append(result)
+    # for uid in bas_uid:
+    #
+    #     cur.execute(select_features(specific_feature), (uid,))
+    #     row = cur.fetchone()
+    #     result = []
+    #
+    #     # check_feature(class_, author, row)
+    #
+    #     for key, value in feature_A_CAMISANI_CALZOLARI(row).items():
+    #         print(key)
+    #         print(value)
+    #         result.append(value)
+    #
+    #     results.append(result)
     return results
 
 
@@ -69,9 +73,8 @@ if __name__ == "__main__":
     #/!\ do not remove this line, it builds the db
     #gen_database(con)
     bas_uid, bas_target = gen_target_array()
-    features = ['name', 'profile_use_background_image', 'location', 'description', 'url', 'listed_count', 'followers_count', 'statuses_count', 'friends_count']
-    
-    evaluation_tables.evaluating_features_foreach_author(bas_uid, bas_target, cur, ['svm', 'tree', 'forest', 'linear_regression', 'neighbors', 'adaBoost'],features,'SaveResult','results_evaluator.txt')
+
+    evaluation_tables.evaluating_features_foreach_author(bas_uid, bas_target, cur, ['svm', 'tree', 'forest', 'linear_regression', 'neighbors', 'adaBoost'])
     
     #printing_table_16(bas_uid, bas_target, cur, features)
     #test_utils.test_forest(bas_uid, bas_target)
