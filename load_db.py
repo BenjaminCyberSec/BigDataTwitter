@@ -55,4 +55,4 @@ def gen_database(con):
     dbgen_users(con)
     dbgen_friends(con)
     dbgen_followers(con)
-    #dbgen_tweets(con)
+    dbgen_tweets(con)
