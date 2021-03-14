@@ -71,13 +71,22 @@ if __name__ == "__main__":
     con = sqlite3.connect("db.sqlite")
     cur = con.cursor()
     #/!\ do not remove this line, it builds the db
-    #gen_database(con)
+    gen_database(con)
+    
+    """
+    sqlite_select_query = 'SELECT * from tweets'
+    cur.execute(sqlite_select_query)
+    records = cur.fetchall()
+    for row in records:
+        print(row)
+    """
+    
     bas_uid, bas_target = gen_target_array()
 
     evaluation_tables.evaluating_features_foreach_author(bas_uid, bas_target, cur, ['svm', 'tree', 'forest', 'linear_regression', 'neighbors', 'adaBoost'])
     
     #printing_table_16(bas_uid, bas_target, cur, features)
-    #test_utils.test_forest(bas_uid, bas_target)
+
     con.close()
 
 
