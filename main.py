@@ -71,7 +71,7 @@ if __name__ == "__main__":
     con = sqlite3.connect("db.sqlite")
     cur = con.cursor()
     #/!\ do not remove this line, it builds the db
-    gen_database(con)
+    #gen_database(con)
     
     """
     sqlite_select_query = 'SELECT * from tweets'

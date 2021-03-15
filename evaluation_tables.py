@@ -12,45 +12,23 @@ from visualisation import save_results
 class_and_author = {
     'A': {'CAMISANI_CALZOLARI':['name', 'profile_use_background_image', 'location', 'description', 'url', 'listed_count', 'followers_count', 'statuses_count', 'friends_count'],
           'SATTE_OF_SEARCH' : ['followers_count', 'friends_count', 'profile_image_url', 'description'],
-          'STRINGHINI': ['name', 'profile_use_background_image', 'location', 'description', 'url', 'listed_count','followers_count', 'statuses_count', 'friends_count'], # ces valeur ne sont pas les bonne . a changer plus tard
+           'STRINGHINI': ['followers_count', 'friends_count'],
           'SACIALBAKERS': ['statuses_count', 'followers_count', 'friends_count', 'location', 'default_profile_image','description'],
           'YANG_AND_AL':['created_at', 'followers_count']
          },
-    
-    'B': {'CAMISANI_CALZOLARI':['geo_enabled', 'favourites_count', 'description'],
-          'SATTE_OF_SEARCH' : ['name', 'profile_use_background_image', 'location', 'description', 'url', 'listed_count', 'followers_count', 'statuses_count', 'friends_count'],
-          'STRINGHINI':['name', 'profile_use_background_image', 'location', 'description', 'url', 'listed_count', 'followers_count', 'statuses_count', 'friends_count'],
-          'SACIALBAKERS': ['name', 'profile_use_background_image', 'location', 'description', 'url', 'listed_count', 'followers_count', 'statuses_count', 'friends_count'],
-          'YANG_AND_AL':['name', 'profile_use_background_image', 'location', 'description', 'url', 'listed_count', 'followers_count', 'statuses_count', 'friends_count']
-         },
-    'C': {'YANG_AND_AL': ['name', 'profile_use_background_image', 'location', 'description', 'url', 'listed_count', 'followers_count', 'statuses_count', 'friends_count']}
+
+    'B': {
+         'CAMISANI_CALZOLARI':['geo_enabled'],
+          'SATTE_OF_SEARCH' : ['name'],
+          'STRINGHINI':['name']#,
+
+
+          # 'SACIALBAKERS': ['name'],
+          # 'YANG_AND_AL':['name']
+         } #,
+
     }
 
-# class_and_author = {
-#     'A': {
-#         'CAMISANI_CALZOLARI': ['name', 'profile_use_background_image', 'location', 'description', 'url', 'listed_count',
-#                                'followers_count', 'statuses_count', 'friends_count'],
-#         'SATTE_OF_SEARCH': ['followers_count', 'friends_count', 'profile_image_url', 'description'],
-#         'STRINGHINI': ['statuses_count', 'followers_count', 'friends_count'],
-#         'SACIALBAKERS': ['statuses_count', 'followers_count', 'friends_count', 'location', 'default_profile_image','description'],
-#         'YANG_AND_AL': ['created_at', 'followers_count']
-#         },
-#
-#     'B': {
-#         'CAMISANI_CALZOLARI': ['name', 'profile_use_background_image', 'location', 'description', 'url', 'listed_count',
-#                                'followers_count', 'statuses_count', 'friends_count'],
-#         'SATTE_OF_SEARCH': ['name', 'profile_use_background_image', 'location', 'description', 'url', 'listed_count',
-#                             'followers_count', 'statuses_count', 'friends_count'],
-#         'STRINGHINI': ['name', 'profile_use_background_image', 'location', 'description', 'url', 'listed_count',
-#                        'followers_count', 'statuses_count', 'friends_count'],
-#         'SACIALBAKERS': ['name', 'profile_use_background_image', 'location', 'description', 'url', 'listed_count',
-#                          'followers_count', 'statuses_count', 'friends_count'],
-#         'YANG_AND_AL': ['name', 'profile_use_background_image', 'location', 'description', 'url', 'listed_count',
-#                         'followers_count', 'statuses_count', 'friends_count']
-#         },
-#     'C': {'YANG_AND_AL': ['name', 'profile_use_background_image', 'location', 'description', 'url', 'listed_count',
-#                           'followers_count', 'statuses_count', 'friends_count']}
-# }
 
 
 def evaluating_features_foreach_author(bas_uid, bas_target,cur,algos):
@@ -61,7 +39,6 @@ def evaluating_features_foreach_author(bas_uid, bas_target,cur,algos):
         for author, specific_feature in value.items():
             results_evaluator[class_][author] = dict()
 
-            ########################
             results = []
             for uid in bas_uid:
                 cur.execute(select_features(specific_feature), (uid,))
@@ -72,7 +49,6 @@ def evaluating_features_foreach_author(bas_uid, bas_target,cur,algos):
                     result.append(value)
 
                 results.append(result)
-            ########################
 
             bas_training = results
             evaluator = Eval(bas_training, bas_target)
