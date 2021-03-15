@@ -80,10 +80,10 @@ class Eval:
         return self.concat_dict(dic)
     
     def svm(self):
-        return self.kfold_eval(svm.SVC(kernel='linear', C=1, random_state=42))
+        return self.kfold_eval(svm.SVC(kernel='linear', C=10, random_state=69))
     
     def tree(self):
-        return self.kfold_eval(tree.DecisionTreeClassifier(criterion='entropy',   min_impurity_decrease=0.03, min_samples_leaf=1))
+        return self.kfold_eval(tree.DecisionTreeClassifier(criterion='entropy',   min_impurity_decrease=0.02, min_samples_leaf=1))
     
     def forest(self, tree_size=100, max_depth=None, min_samples_split=2, min_impurity_decrease=0.0):
         return self.kfold_eval(RandomForestClassifier(n_estimators=tree_size,max_depth=max_depth, min_samples_split=min_samples_split, min_impurity_decrease=min_impurity_decrease))
@@ -92,8 +92,8 @@ class Eval:
         return self.kfold_eval(linear_model.LogisticRegression())
     
     def neighbors(self):
-        return self.kfold_eval(KNeighborsClassifier(n_neighbors=2, algorithm='ball_tree'))
+        return self.kfold_eval(KNeighborsClassifier(n_neighbors=2, algorithm='kd_tree'))
     
     def adaBoost(self):
-        return self.kfold_eval(AdaBoostClassifier(n_estimators=100,learning_rate=1.0, random_state=0))
+        return self.kfold_eval(AdaBoostClassifier(n_estimators=100,learning_rate=0.9, random_state=0))
     
